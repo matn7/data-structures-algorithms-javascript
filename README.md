@@ -634,3 +634,198 @@ const swap = (arr, idx1, idx2) => {
 O(log n) decompositions
 O(n) comparisions per decomposition
 ```
+
+### Quick Sort
+
+- Like merge sort, exploits the fact that arrays of 0 or 1 element are always sorted
+- Works by selecting one element (called the "pivot") and finding the index where the pivot should end up in the sorted array 
+- Once the pivot is positioned appropriately, quick sort can be applied on either side of the pivot
+
+```
+s - sorted
+                                [ 5, 2, 1, 8, 4, 7, 6, 3 ]
+                                  *
+                                [ 3, 2, 1, 4, 5, 7, 6, 8]
+                                  *           s
+                                [ 1, 2, 3, 4, 5, 7, 6, 8]
+                                  *     s     s
+                                [ 1, 2, 3, 4, 5, 7, 6, 8]
+                                  s     s     s
+
+                                [ 1, 2, 3, 4, 5, 7, 6, 8]
+                                  s     s     s  *
+                                [ 1, 2, 3, 4, 5, 6, 7, 8]
+                                  s     s     s     s
+``` 
+
+**Pivot Helper**
+
+- In order to implement merge sort, it's useful to first implement a function responsible arrainging elements in an array on either side of pivot
+- Given an array, this helper function should designate an element as the pivot
+- It should then rearrenge elements in the array so that all values less than the pivot are moved to the left of the pivot, and all values greater than the pivot are moved to the right of the pivot
+- The order of elements on either side of the pivot doesn't matter!
+- The helper should do this in place, that is, it should not create a new array
+- When complete, the helper should return the index of the pivot
+
+**Picking a pivot**
+
+- The runtime of quick sort depends in part how one selects the pivot
+- Ideally, the pivot should be chosen so that it's rough;y the median value in the data set you're sorting
+- For simplicity, always choose the pivot to be the first element
+
+**Pivot Pseudocode**
+
+- Accept three arguments: an array, a start index, and an end index
+- Grab the pivot from the start of the array
+- Store the current pivot index in a variable (this will keep track of where the pivot should end up)
+- Loop through the array from the start until the end
+    - If the pivot is greater than the current element, increment the pivot index variable and then swap the current element with the element at the pivot index
+- Swap the starting element (i.e. the pivot) with the pivot index    
+- Return pivot index
+
+**Quicksort Pseudocode**
+
+- Call the pivot helper on the array
+- When the helper returns to you the updated pivot index, recursively call the pivot helper on the subarray to the left of that index, and the subarray to the right of that index
+- Base case occurs when consider a subarray with less than 2 elements
+
+**Big O of Quicksort**
+
+| Time Complexity (Best) | Time Complexity (Avg) | Time Complexity (Worst) | Space Complexity |
+|---|---|---|---|
+| O(n log n) | O(n log n) | O(n^2) | O(log n) |
+
+- O(log n) decompositions
+- O(n) comparisions per decomposition
+- Worst Case: Data already sorted O(n^2)
+    - O(n) decompositions and O(n) comparisions per decomposition
+
+### Radix Sort
+
+**Comparision sort**
+
+- Average Time Complexity
+    - Bubble Sort - O(n^2)
+    - Insertion Sort - O(n^2)
+    - Selection Sort - O(n^2)
+    - Quick Sort - O(n log(n))
+    - Merge Sort - O(n log(n))
+
+- We can do better but not by making comparisions
+
+**Radix Sort**
+
+- Radix sort is a special sorting algorithm that works on  lists of numbers
+- It never makes comparisions between elements!
+- It exploits the fact that information about the size of a number is encoded in the number of digits
+- More digits means a bigger number!
+
+```
+[ 1556, 4, 3556, 593, 408, 4386, 902, 7, 8157, 86, 9637, 29 ]
+
+|    |    |    |    |    |    | 86 |    |    |    |
+|    |    |    |    |    |    |4386|9637|    |    |
+|    |    |    |    |    |    |3556|8157|    |    | 
+|    |    |902 |593 | 4  |    |1556|  7 |408 | 29 |
++----+----+----+----+----+----+----+----+----+----+
+   0    1    2    3    4    5    6    7    8    9
+
+[ 902, 593, 4, 1556, 3556, 4386, 86, 7, 8157, 9637, 408, 29]
+
+|408 |    |    |    |    |    |    |    |    |    |
+| 7  |    |    |    |    |6157|    |    |    |    |
+| 4  |    |    |    |    |3556|    |    | 86 |    | 
+|902 |    | 29 |9637|    |1556|    |    |4386|593 |
++----+----+----+----+----+----+----+----+----+----+
+   0    1    2    3    4    5    6    7    8    9
+
+[ 902, 4, 7, 408, 29, 9637, 1556, 3556, 8157, 4386, 86, 593 ]
+
+| 86 |    |    |    |    |    |    |    |    |    |
+| 29 |    |    |    |    |593 |    |    |    |    |
+| 7  |    |    |    |    |3556|    |    |    |    | 
+| 4  |8157|    |4386|408 |1556|9637|    |    |902 |
++----+----+----+----+----+----+----+----+----+----+
+   0    1    2    3    4    5    6    7    8    9
+
+[ 4, 7, 29, 86, 8157, 4386, 408, 1556, 3556, 593, 9637, 902]
+
+|902 |    |    |    |    |    |    |    |    |    |
+|593 |    |    |    |    |    |    |    |    |    |
+|408 |    |    |    |    |    |    |    |    |    |      
+| 86 |    |    |    |    |    |    |    |    |    |
+| 29 |    |    |    |    |    |    |    |    |    |
+| 7  |    |    |    |    |    |    |    |    |    | 
+| 4  |1556|    |3556|4386|    |    |    |8157|9637|
++----+----+----+----+----+----+----+----+----+----+
+   0    1    2    3    4    5    6    7    8    9
+
+[ 4, 7, 29, 86, 408, 593, 902, 1556, 3556, 4386, 8157, 9637]   
+```
+
+**Radix sort helpers**
+
+- `getDigit(num, place)` - returns the digit in num at the given place value
+
+```js
+getDigit(12345, 0);     // 5
+getDigit(12345, 1);     // 4
+```
+
+```js
+function getDigit(num, i) {
+    return Math.floor(Math.abs(num) / Math.pow(10, i)) % 10;
+}
+```
+
+- `digitCount(num)` - returns the number of digits in num
+
+```js
+digitCount(1);      // 1
+digitCount(312);    // 3
+```
+
+```js
+function digitCount(num) {
+    if (num === 0) return 1;
+    return Math.floor(Math.log10(Math.abs(num))) + 1;
+}
+```
+
+- `mostDigits(nums)` - Given an array of numbers, returns the number of digits in the largest numbers in the list
+
+```js
+mostDigits([1234, 56, 8]);      // 4
+mostDigits([2, 33, 12345, 6]);  // 5
+```
+
+```js
+function mostDigits(nums) {
+    let maxDigits = 0;
+    for (let i = 0; i < nums.length; i++) {
+        maxDigits = Math.max(maxDigits, digitCount(nums[i]));
+    }
+    return maxDigits;
+}
+```
+
+**Radix sort pseudocode**
+
+- Define a function that accepts list of numbers
+- Figure out how many digits the largest number has
+- Loop from k = 0 up to this largest number of digits
+- For each iteration of the loop:
+    - Create buckets for each digit (0 to 9)
+    - place each number in the corresponding bucket based on its kth digit
+- Replace our existing array with values in our buckets, starting with 0 and going up to 9
+- return list at the end
+
+**Radix sort Big O**
+
+| Time Complexity (Best) | Time Complexity (Avg) | Time Complexity (Worst) | Space Complexity |
+|---|---|---|---|
+| O(nk) | O(nk) | O(nk) | O(n + k) |
+
+- n - length of array
+- k - number of digits (average)
+
