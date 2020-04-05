@@ -829,3 +829,564 @@ function mostDigits(nums) {
 - n - length of array
 - k - number of digits (average)
 
+***
+
+## Data Structures
+
+- Data structures are collections of values, the relationships among them, and the functions or operations that can be applied to the data
+- Different data structures excel at different things. Some are highly specialized, while other (like arrays) are more generally used
+
+### Class syntax
+
+- ES2015 class syntax
+- Classes are blueprints that when created make objects known as instances
+- Classes are created with the new keyword
+- The constructor function is a special function that gets run when the class is instantiated
+- Instance methods can be added to classes similar to methods in objects
+- Class methods can be added using the static keyword
+
+**What is a class?**
+
+- A blueprint for creating objects with pre-defined properties and methods
+- We're going to implement data structures as classes!
+
+```js
+class Student {
+    constructor(firstName, lastName) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
+}
+```
+
+- The method to create new objects **must** be called constructor
+- The class keyword creates a constant, so you can not redefine it. Watch out for the syntax as well!
+
+**Creating objects from classes**
+
+- We use the  **new** keyword
+
+```js
+let firstStudent = new Student("Majk", "Majki");
+let secondStudent = new Student("Puszek", "Seb");
+```
+
+**Instance Methods**
+
+- Inside all of our instance methods and constructor, the keyword `this` refers to the object created from that class (also known as an instance)
+
+```js
+class Student {
+    constructor(firstName, lastName) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
+    fullName() {
+        return `Your full name is ${this.firstName} ${this.lastName}`;
+    }
+}
+
+let firstStudent = new Student("Mike", "Pusz");
+
+firstStudent.fullName();    // Mike Pusz
+```
+
+**Class Methods**
+
+- Utility function for application
+- Not related to single student instance (particular)
+
+```js
+class Student {
+    constructor(firstName, lastName) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
+    
+    fullName() {
+        return `Your full name is ${this.firstName} ${this.lastName}`;
+    }
+
+    static enrollStudents(...students) {
+        // ...
+    }
+
+    static enrollStudents() {
+        return "Enrolling Students";
+    }
+}
+
+let firstStudent = new Student("Mike", "Pusz");
+let secondStudent = new Student("Bill" "Setag");
+
+firstStudent.fullName();    // Mike Pusz
+Student.enrollStudents([firstStudent, secondStudent]);
+```
+
+## Singly Linked List
+
+**What is a linked list?**
+
+- A data structure that contains a head, tail and length property.
+- Linked Lists consist of nodes, and each node has a value and a pointer to another node or null
+
+**Lists**
+
+- Do not have indexes!
+- Connected via nodes with a next pointer
+- Random access is not allowed
+
+**Arrays**
+
+- Indexed in order!
+- Insertion and deletion can be expensive
+- Can quickly be accessed at a specific index
+
+### Pushing
+
+**Pushing pseudocode**
+
+- Function should accept a value
+- Create a new node using value passed to the function
+- If there is no head property on the list, set the head and tail to be the newly created node
+- Otherwise set the next property on the tail to be the new node and set the tail property on the list to be newly created node
+- Increment the length by one
+- Return the linked list
+
+### Popping
+
+- Removing a node from the end of the Linked List!
+
+**Popping pseudocode**
+
+- If there are no nodes in the list, return undefined
+- Loop through the list until you reach the tail 
+- Set the next property of the 2nd to last node to be null
+- Set the tail to be the 2nd to last node
+- Decrement the length of the list by 1
+- Return the value of the node removed
+
+### Shifting
+
+- Removing a new node from the beginning of the Linked List!
+
+**Shifting pseudocode**
+
+- If there are no nodes, return undefined
+- Store the current head property in a variable
+- Set the head property to be the current head's next property
+- Decrement the length by 1
+- Return the value of the node removed
+
+### Unshifting
+
+- Adding a new node to the beginning of the Linked List
+
+**Unshifting pseudocode**
+
+- This function should accept a value
+- Create a new node using the value passed to the function
+- If there is no head property on the list, set the head and tail to be the newely created node
+- Otherwise set the newly created node's next property to be the current head property on the list
+- Set the head property on the list to be that newely created node
+- Increment the length of the list by 1
+- Return the linked list
+
+### Get
+
+- Retrieving a node by it's position in the Linked List!
+
+**Get pseudocode**
+
+- This function should accept an index
+- If the index is less than zero or greater than of equal to the length of the list, return null
+- Loop through the list until you reach the index and return the node at that specific index
+
+### Set
+
+- Changing the value of a node based on it's position in the Linked List
+
+**Set pseudocode**
+
+- This function should accept a value and an index
+- Use your get function to find the specific node
+- If the node is not found, return false
+- If the node is found, set the value of that node to be the value passed to the function and return true
+
+### Insert
+
+- Adding a node to the Linked List at a specific position
+
+**Insert pseudocode**
+
+- If the index is less than zero or greater than the length, return false
+- If the index is the same as the length, push a new node to the end of the list
+- If the index is 0, unshift a new node to the start of the list
+- Otherwise, using the get method, access the node at the index -1 (prev)
+- Set the next property on that node to be the new node
+- Set the next property on the new node to be the previous next
+- Increment the length
+- Return true
+
+###  Remove
+
+**Remove pseudocode**
+
+- If the index is less than zero or greater than the length, return undefined
+- If the index is the same as the length-1, pop
+- If the index is 0, shift
+- Otherwise, using the get method, access the node at the index - 1
+- Set the next property on that node to be the next of the next node
+- Decrement the length
+- Return the value of the node removed
+
+### Reverse
+
+- Reversing the Linked List in place!
+
+**Reverse pseudocode**
+
+- Swap the head and tail
+- Create a variable called next
+- Create a variable called prev
+- Create a variable called node and initialize it to the head property
+- Loop through the list
+- Set next to be the next property on whatever node is
+- Set the next property on the node to be whatever prev is
+- Set prev to be the value of the node variable
+- Set the node variable to be the value of the next variable
+
+### Big O of Singly Linked Lists
+
+- Insertion - O(1)
+- Removal - It depends O(1) or O(N)
+- Searching - O(N)
+- Access - O(N)
+
+**Recap**
+
+- Singly Linked Lists are an excellent alternative to arrays when insertion and deletion at the beginning are frequently required
+- Arrays contain a built in index wheras Linked Lists do not
+- The idea of a list data structure that consists of nodes is the foundation for other data structures like Stacks and Queues
+
+## Doubly Linked List
+
+- Almost identical to Singly Linked Lists, except every node has another pointer, to the previous node!
+
+```
+More memory === More Flexibility
+```
+- It's almost always tradeoff!
+
+### Pushing
+
+- Adding a node to the end of the Doubly Linked List
+
+**Pushing pseudocode**
+
+- Create a new node with the value passed to the function
+- If the head property is null set the head and tail to be the newly created node
+- If not, set the next property on the tail to be that node
+- Set the previous property on the newly created node to be the tail
+- Set the tail to be the newely created node
+- Increment the length
+- Return the Doubly Linked List
+
+### Popping
+
+- Removing a node from the end of the Doubly Linked List
+
+**Popping pseudocode**
+
+- If there is no head, return undefined
+- Store the current tail in a variable to return later
+- If the length is 1, set the head and tail to be null
+- Update the tail to be the previous Node.
+- Set the newTail's next to null
+- Set oldTail (step 2) prev to null
+- Decrement the length
+- Return the value removed
+
+### Shift
+
+- Removing a node from the beginning of the Doubly Linked List
+
+**Shifting pseudocode**
+
+- If length is 0, return undefined
+- Store the current head property in a variable (oldHead) 
+- If the length is one
+    - set the head to be null
+    - set the tail to be null
+- Update the head to be the next of the old head
+- Set the head's prev property to null
+- Set old head's next to null
+- Decrement the length
+- Return old head
+
+### Unshift
+
+- Adding a node to the beginning of the Doubly Linked List
+
+**Unshifting pseudocode**
+
+- Create a new node with the value passed to the function
+- If the length is 0
+    - Set the head to be the new node
+    - Set the tail to be the new node
+- Otherwise
+    - Set the prev property on the head of the list to be the new node
+    - Set the next property on the new node to be the head property
+    - Update the head to be the new node
+- Increment the length
+- Return the list
+
+### Get
+
+- Accessing a node in a Doubly Linked List by its position
+
+**Get pseudocode**
+
+- If the index is less than 0 or greater or equal to the length, return null
+- If the index is less than or equal to the half length of the list
+    - Loop through the list starting from the head and loop towards the middle
+    - Return the node once  it is found
+- If the index is greater than half length of the list
+    - Loop through the list starting from the tail and loop towards the middle
+    - Return the node once it is found
+
+### Set
+
+- Replacing the value of a node in a Doubly Linked List
+
+**Set pseudocode**
+
+- Create a variable which is the result of the get method at the index passed to function
+    - If the get method returns a valid node, set the value of that node to be the value passed to the function
+    - Return true;
+
+### Insert
+
+- Adding a node in a Doubly Linked List by a certain position
+
+**Insert pseudocode**
+
+- If the index is less than zero or greater than (or equal to)* the length return false
+- If the index is 0, unshift
+- If ubdex us the same as the length, push
+- Use the get method to access the index - 1 (previous)
+- Set the next and prev properties on the correct nodes to link everything together
+- Increment the length
+- Return true
+
+### Remove
+
+- Removing a node in a Doubly Linked List by a certain position
+
+**Remove pseudocode**
+
+- If the index is less than zero or greater than or equal to the length return undefined
+- If the index is 0, shift
+- If the index is the same as the length - 1, pop
+- Use the get method to retrieve the item to be removed
+- Update the next and prev properties to remove the found node from the list
+- Set next and prev to null on the found node
+- Decrement the length
+- Return the removed node
+
+### Big O of Doubly Linked Lists
+
+- Insert - O(1)
+- Removal - O(1)
+- Searching - O(N)
+- Access - O(N)     Searching is O(N/2) actually, but this means O(N)
+
+**Recap**
+
+- Doubly Linked Lists are almost identical to Singly Linked Lists except there is an additional pointer previous nodes
+- Better than Singly Linked Lists for finding nodes and can be done in half the time!
+- However, they do take up more memory considering extra pointer
+
+## Stacks
+
+- A LIFO data structure!
+- The last element added to the stack will be the first element removed from the stack 
+
+**Where stacks are used**
+
+- Managing function invocations
+- Undo / Redo
+- Routing (the history object) is treated like a stack!
+
+### Creating a Stack with an Array
+
+### Linked List Implementation
+
+```js
+class Stack {
+    constructor() {
+        this.first = null;
+        this.last = null;
+        this.size = 0;
+    }
+}
+```
+
+```js
+class Node {
+    constructor(value) {
+        this.value = value;
+        this.next = null;
+    }
+}
+```
+
+### Pushing
+
+- Add a value to the top of the stack!
+
+**Pushing pseudocode**
+
+- The function should accept a value
+- Create a new node with that value
+- If there are no nodes in the stack, set the first and last property to be the newly created node
+- If there is at least one node, create a variable that stores the current first property on the stack
+- Reset the first property to be the newly created node
+- Set the next property on the node to be the previous created variable
+- Increment the size of the stack by 1
+
+### Popping
+
+- If there are no nodes in the stack, return null
+- Create a temporary variable to store the first property on the stack
+- If there is only 1 node, set the first and last property to be null
+- If there is more than one node, set the first property to be the next property on the current first
+- Decrement the size by 1
+- Return the value of the node removed
+
+### Big O of Stacks
+
+- Insertion - O(1)
+- Removal - O(1)
+- Searching - O(N)
+- Access - O(N)
+
+**Recap**
+
+- Stacks are a LIFO data structure where the last value in is always the first one out
+- Stacks are used to handle function invocations (the call stack), for operations like undo/redo, and for routing (remember pages you have visited and go back/forward) and much more!
+- They are not a built in data structure in JavaScript, but are relatively simple to implement
+
+## Queues
+
+- A FIFO data structure!
+- Background tasks
+- Uploading resources
+- Printing / Task processing
+
+```js
+class Queue {
+    constructor() {
+        this.first = null;
+        this.last = null;
+        this.size = 0;
+    }
+}
+```
+
+```js
+class Node {
+    constructor(value) {
+        this.value = value;
+        this.next = null;
+    }
+}
+```
+
+### Creating a Queue using array
+
+```js
+// PUSH with SHIFT
+var q = [];
+q.push("FIRST");
+q.push("SECOND");
+q.push("THIRD");
+
+q.shift();  // FIRST
+
+// OR
+// UNSHIFT with POP
+
+q.unshift("FIRST");
+q.pop();
+```
+
+### Creating a Queue using Linked List
+
+```js
+class Queue {
+    constructor() {
+        this.first = null;
+        this.second = null;
+        this.size = 0;
+    }
+}
+```
+
+```js
+class Node {
+    constructor(value) {
+        this.value = value;
+        this.next = null;
+    }
+}
+```
+
+### Enqueue
+
+**Enqueue pseudocode**
+
+- This function accepts some value
+- Create a new node using that value passed to the function
+- If there are no nodes in the queue, set this node to be the first and last property of the queue
+- Otherwise, set the next property on the current last to be that node, and then set the last property of the queue to be that node
+- Increment the size of the queue by 1
+
+### Dequeue
+
+**Dequeue pseudocode**
+
+- If there is no first property, return null
+- Store the first property in a variable
+- See if the first is the same as the last (check if there is only 1 node). If so, set the first and last to be null
+- If there is more than 1 node, set the first property to be the next property of first
+- Decrement the size by 1
+- Return the value of the node dequeued
+
+### Big O of Queues
+
+- Inserting - O(1)
+- Removal - O(1)
+- Searching - O(N)
+- Access - O(N)
+
+**Recap**
+
+- Queues are a FIFO data structre, all elements are first in first out.
+- Queues are useful for processing tasks and are foundational for more complex data structures
+- Insertion and Removal can be done in O(1)
+
+## Trees
+
+- A data structure that consists of nodes in a parent / child relationship
+- Lists - linear
+- Trees - nonlinear
+
+### Tree terminology
+
+- Root - The top node in a tree
+- Child - A node directly connected to another node when moving away from the Root
+- Parent - The converse of a child
+- Siblings - A group of nodes with the same parent
+- Leaf - A node with no children
+- Edge - The connection between one node and another
