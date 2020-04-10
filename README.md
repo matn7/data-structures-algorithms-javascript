@@ -1547,3 +1547,215 @@ class Node {
 - Binary Trees can have values of any type, but at most two children for each parent
 - Binary Search Trees are a more specific version of binary trees where every node to the left of a parent is less than it's value and every node to the right is greater
 - We can search through Trees using BFS abd DFS
+
+## Binary Heaps
+
+- Very similar to a binary search tree, but with some different rules!
+- In a MaxBinaryHeap, parent nodes are always lager then child nodes. In a MinBinaryHeap, parent nodes are always smaller than child nodes
+
+**Max Binary Heap**
+
+- Each parent has at most two child nodes
+- The value of each parent node is always greater than its child nodes
+- In a max Binary Heap the parent is greater than the children, but there are no guarantees between sibling nodes
+- A binary heap is as compact as possible. All the children of each node are as full as they can be and left children are filled out first
+
+**Used**
+
+- Binary Heaps are used to implement Priority Queues, which are very commonly used data structures
+- They are also used quite a bit, with graph traversal algorithms
+
+### Storing Heaps
+
+```
+* For any index of an array         n
+* The left child is stored at       2n + 1
+* The right child is at             2n + 2
+```
+
+```
+* For any child node at index       n
+* Its parent is at index            (n-1)/2
+```
+
+### Heaps Insert
+
+- Add to the end
+- Bubble up
+
+**Insert pseudocode**
+
+- Push the value into the values property on the heap
+- Bubble the value up to its correct spot!
+    - Create a variable called index which is the length of the values property - 1
+    - Create a variable called parentIndex which is the floor of (index-1)/2
+    - Keep looping as long as the values element at the parentIndex is less than the values element at the child index
+        - Swap the value of the values element at the parentIndex with the value of the element property at the child index
+        - Set the index to be the parentIndex, and start over!
+
+### Removing from a Heap
+
+- Remove the root
+- Replace with the most recently added
+- Adjust (sink down)
+
+**Sink Down**
+
+- The procedure for deleting the root from the heap (effectively extracting the maximum element in a max-heap or the minimum element in a min-heap) and restoring the properties is called down-heap (also known as bubble-down, precolate-down, sift-down, trickle down, heapify-down, cascade-down, and extract-min/max).
+
+**Removing - extractMax pseudocode**
+
+- Swap the first value in the values property with the last one
+- Pop from the values property, so you can return the value at the end
+- Have the new root "sink down" to the correct spot:
+    - Your parent index starts at 0 (the root)
+    - Find the index of the left child: 2 * index + 1 (make sure its not out of bounds)
+    - Find the index of the right child: 2 * index + 2 (make sure its not out of bounds)
+    - If the left or right child is greater than element...swap. If both left and right children are larger, swap with the largest child
+    - The child index you swapped to now becomes the new property index
+    - Keep looping and swapping until neither child is larger than the element
+    - Return the old root!
+
+### Priority Queue
+
+- A data structure where each element has a priority. Elements with higher priorities are served before elements with lower priorities.
+
+**A naive version**
+
+- Use a list to store all elements
+- Iterate over the entire thing to find the highest priority element
+
+**Priority Queue pseudocede**
+
+- Write a Min Binary Heap - lower number means higher priority
+- Each Node has a val and priority. Use the priority to build the heap
+- Enqueue method accepts a value and priority, makes a new node, and puts it in the right spot based off of its priority
+- Dequeue method removes root element, returns it, and rearranges heap using priority
+
+### Big O of Binary Heap
+
+- Insertion - O(log N)
+- Removal - O(log N)
+- Search - O(N)
+
+**Recap**
+
+- Binary Heaps are very useful data structures for sorting, and implementing other data structures like priority queues
+- Binary Heaps are either MaxBinaryHeaps or MinBinaryHeaps with parents either being smaller or larger than their children
+- With little math, we can represent heaps using arrays!
+
+## Hash Tables
+
+- Hash tables are used to store key-value pairs
+- They are like arrays, but the keys are not ordered
+- Hash tables are fast for all of the following operations: finding values, adding new values, and removing values!
+- Because of their speed, hash tables are very commonly used!
+
+```
+Python has Directories
+JS has Objects and Maps*
+Java, Go, Scala have Maps
+Ruby has Hashes
+```
+
+### The Hash part
+
+- To implement a hash table, we'll be using an array
+- In order to look up values by key, we need a way to convert keys into valid array indices
+- A function that performs this task is called a hash function
+
+### Hash Function
+
+- Fast (i.e. constant time)
+- Doesn't cluster outputs at specific indices, but distributes uniformly
+- Deterministic (same input yield same output)
+
+**Hash that works on strings only**
+
+- Not constant time - linear in key length
+- Could be more random
+
+```js
+function hash(key, arrayLen) {
+    let total = 0;
+    for (let char of key) {
+        // map "a" to 1, "b" to 2, etc.
+        let value = char.charCodeAt(0) - 96;
+        total = (total + value) % arrayLen;
+    }
+    return total;
+}
+```
+
+- The prime number in the hash is helpful in spreading out the keys more uniformly
+- It's also helpful if the array you're putting values into has a prime length
+
+```js
+function hash(key, arrayLen) {
+    let total = 0;
+    let WIRED_PRIME = 31;
+    for (let i = 0; i < Math.min(key.length, 100); i++) {
+        let char = key[i];
+        let value = char.charCodeAt(0) - 96;
+        total = (total * WIRED_PRIME + value) % arrLen;
+    }
+    return total;
+}
+```
+
+### Dealong with collisions
+
+- Even with a large array and a great hash function, collisions are inevitable
+    - Separate Chaining
+    - Linear Probing
+
+**Separate Chaining**
+
+- With separate chaining, at each index in our array we store values using a more sophisticated data structures (e.g. an array or a linked list)
+- This allows us to store multiple key-value pairs at the same index
+
+**Linear Probing**
+
+- With linear probing, when we find a collision, we search through the array to find the next empty slot
+- Unlike with separate chaining, this allows us to store a single key-value at each index
+
+### Set / Get
+
+**set**
+
+- Accepts a key and a value
+- Hashes the key
+- Stores the key-value pair in the hash table array via separate chaining
+
+**get**
+
+- Accepts a key
+- Hashes the key
+- Retrieves the key-value pair in the hash table
+- If the key isn't found, returns undefined
+
+### Keys / Values
+
+**keys**
+
+- Loops through the hash table array and returns an array of keys in the table
+
+**values**
+
+- Loops through the hash table array and returns an array of values in the table
+
+### Hash Table Big O Complexity
+
+- Insert: O(1)
+- Deletion: O(1)
+- Access: O(1)
+
+**Recap**
+
+- Hash tables are collections of key-value pairs
+- Hash tables can find values quickly with given key
+- Hash tables can add new key-values quickly
+- Hash tables store data in a large array, and work by hashing the keys
+- A good hash should be fast, distribute keys uniformly and be deterministic
+- Separate chaining and linear probing are two strategies used to deal with two keys that hash to the same index
+
