@@ -1759,3 +1759,385 @@ function hash(key, arrayLen) {
 - A good hash should be fast, distribute keys uniformly and be deterministic
 - Separate chaining and linear probing are two strategies used to deal with two keys that hash to the same index
 
+## Graph
+
+- A graph data structure consists of a finite (and possibly mutable) set of vertices or nodes or points, together with a set of unordered pairs of these vertices for an undirected graph or a set of ordered pairs for a directed graph.
+
+```
+Nodes + Connections
+```
+
+### Uses for Graphs
+
+- Social Networks
+- Location / Mapping
+- Routing Algorithms
+- Visual Hiererchy
+- File System Optimizations
+
+**Recommendations**
+
+- "Frequently bought with"
+- "People you might know"
+
+### Types of Graphs
+
+**Essential graph trems**
+
+- Vertex - a node
+- Edge - connection between nodes
+- Weighted/Unweighted - values assigned to distances between vertices
+- Directed/Undirected - directions assigned to distance between vertices
+
+### Adjacency matrix
+
+### Adjacency list
+
+### Adjacency matrix vs list Big O
+
+```
+|V| - number of vertices
+|E| - number of edges
+```
+
+| OPERATION | ADJACENCY LIST | ADJACENCY MATRIX |
+|---|---|---|
+| Add Vertex | O(1) | O(|V^2|) |
+| Add Edge | O(1) | O(1) |
+| Remove Vertex | O(|V| + |E|) | O(|V^2|) |
+| Remove Edge | O(|E|) | O(1) |
+| Query | O(|V| + |E|) | O(1) |
+| Storage | O(|V| + |E|) | O(|V^2|) |
+
+**Adjacency matrix**
+
+- Takes up more space (in sparse graphs)
+- Slower to iterate over all edges
+- Faster to lookup specific edge
+
+**Adjacency list**
+
+- Can take up less space (in sparse graphs)
+- Faster to iterate over all edges
+- Can be slower to lookup specific edge
+
+**Which use**
+
+- Adjacency List
+    - Most data in the real world tends to lend itself to sparser and/or large graph
+
+### Adding vertex
+
+```js
+class Graph {
+    constructor() {
+        this.adjacencyList = {};
+    }
+}
+```
+
+- We are building an undirected graph
+
+**Adding a vertex pseudocode**
+
+- Write a method called addVertex, which accepts a name of a vertex
+- It should add a key to the adjacency list with the name of the vertex and set its value to be an empty array
+
+```js
+graph.addVertex("Pineapple");
+```
+
+```json
+{
+    "Pineapple": []
+}
+```
+
+### Adding an edge
+
+- This function should accept two vertices, we can call them vertex1 and vertex2
+- The function should find in the adjacency list the key of vertex1 and push vertex2 to the array
+- The function should find in the adjacency list the key of vertex2 and push vertex1 to the array
+
+```json
+{
+    "London": [],
+    "New Delhi": [],
+    "Rio de Janeiro": []
+}
+```
+:arrow_down:
+```js
+graph.addEdge("London","Rio de Janeiro");
+```
+:arrow_down:
+```json
+{
+    "London": ["Rio de Janeiro"],
+    "New Delhi": [],
+    "Rio de Janeiro": ["London"]
+}
+```
+
+### Remove an edge
+
+- This function should accept two vertices, we'll call them vertex1 and vertex2
+- The function should reassign the key of vertex1 to be an array that does not contain vertex2
+- The function should reassign the key of vertex2 to be an array that does not contain vertex1
+
+```json
+{
+    "London": ["Rio de Janeiro"],
+    "New Delhi": [],
+    "Rio de Janeiro": ["London"]
+}
+```
+:arrow_down:
+```js
+graph.removeEdge("London", "Rio de Janeiro")
+```
+:arrow_down:
+```json
+{
+    "London": [],
+    "New Delhi": [],
+    "Rio de Janeiro": []
+}
+```
+
+### Remove a vertex
+
+- The function should accept a vertex to remove
+- The function should loop as long as there are any other vertices in the adjacency list for that vertex
+- Inside of the loop, call removeEdge function with the vertex we are removing and any values in the adjacency list for that vertex
+- delete the key in the adjacency list for that vertex
+
+```json
+{
+    "Tokyo": ["Dallas", "Hong Kong"],
+    "Dallas": ["Tokyo", "Hong Kong", "Los Angeles"],
+    "Hong Kong": ["Tokyo", "Dallas", "Los Angeles"],
+    "Los Angeles": ["Hong Kong", "Dallas"]
+}
+```
+:arrow_down:
+```js
+graph.removeVertex("Hong Kong");
+```
+:arrow_down:
+```json
+{
+    "Tokyo": ["Dallas"],
+    "Dallas": ["Tokyo", "Los Angeles"],
+    "Los Angeles": ["Dallas"]
+}
+```
+
+## Graph Traversal
+
+- Visiting, Updating, Checking each vertex in a graph
+
+**Graph traversal uses**
+
+- Peer to peer networking
+- Web crowlers
+- Finding "closest" matches/recommendations
+- Shortest path problemns
+    - GPS Navigation
+    - Solving mazes
+    - AI (shortest path to win the game)
+
+### Depth First Graph Traversal Recursive
+
+**DFS pseudocode**
+
+- Recursive
+
+```
+DFS(vertex):
+    if vertex is empty
+        return (this is base case)
+    add vertex to results list
+    mark vertex as visited
+    for each neighbor in vertex's neighbors:
+        if neighbor is not visited:
+            recursively call DFS on neighbor
+```
+
+- The function should accept a starting node
+- Create a list to store the end result, to be returned at the very end
+- Create an object to store visited vertices
+- Create a helper function which accepts a vertex
+    - The helper function should return early if the vertex is empty
+    - The helper function should place the vertex it accepts into the visited object and push that vertex into the result array
+    - Loop over all of the values in the adjacencyList for that vertex
+    - If any of those values have not been visited, recursively invoke the helper function with that vertex
+- Invoke the helper function with the starting vertex
+- Return the result array
+
+### Depth First Graph Traversal Iterative
+
+**DFS pseudocode**
+
+- Iterative
+
+```
+DFS-ITERATIVE(start):
+    let S be a stack
+    S.push(start)
+    while S is not empty
+        vertex = S.pop()
+        if vertex is not labeled as discovered:
+            visit vertex (add to result list)
+            label vertex as discovered
+            for each of vertex's neighbors, N do
+                S.push(N)
+```
+
+**DFS iterative pseudocode**
+
+- The function should accept a starting node
+- Create a stack to help use keep track of vertices (use a list/array)
+- Create a list to store the end result, to be returned at the very end
+- Create an object to store visited vertices
+- Add the starting vertex to the stack, and mark it visited
+- While the stack has something in it:
+    - Pop the next vertex from the stack
+    - If that vertex hasn't neen visited yet
+        - Mark it as visited
+        - Add it to the result list
+        - Push all of neighbors into the stack
+- Return the result array
+
+### Breadth First
+
+- Visit neighbors at current depth first!
+
+**Breadth First Search pseudocode**
+
+- This function should accept a starting vertex
+- Create a queue (array) and place the starting vertex in it
+- Create an array to store the nodes visited
+- Create an object to store nodes visited
+- Mark the starting vertex as visited
+- Loop as long as there is anything in the queue
+- Remove the first vertex from the queue and push it into the array that stores nodes visited
+- Loop over each vertex in the adjacency list for the vertex you are visiting
+- If it is not inside the object that stores nodes visited, mark it as visited and enqueue that vertex
+- Once you have finished looping, return the array of visited nodes
+
+## Dijkstra's Algorithm
+
+- Finds the shortest path between two vertices on a graph
+- What's the fastest way to get from point A to point B?
+
+**Used**
+
+- GPS - finding fastest route
+- Network Routing - finds open shortest path for data
+- Airline tickets - finding cheapest route to your destination
+
+### Weighted Graph
+
+```json
+{
+    "A": [{"node": "B", "weight": 10}]
+}
+```
+
+- Every time we look to visit a new node, we pick the node with the smallest known distance to visit first
+- Once we've moved to the node we're going to visit, we look at each of its neighbors
+- For each neighboring node, we calculate the distance by summing the total edges that lead to the node we're checking from the starting node
+- If the new total distance to a node is less than the previous total, we store the new shorter distance for that node
+
+```js
+class PriorityQueue {
+    constructor() {
+        this.values = [];
+    }
+    enqueue(val, priority) {
+        this.values.push({val, priority});
+        this.sort();
+    };
+    dequeue() {
+        return this.values.shift();
+    };
+    sort() {
+        this.values.sort((a,b) => a.priority - b.priority);
+    };
+}
+```
+
+## Dynamic Programming
+
+- A method for solving a complex problem by breaking it down into a collection of simpler subproblems, solving each of those subproblems just once, and storing their solutions
+
+### Overlapping Subproblems
+
+- A problem is said to have overlapping subproblems if it can be broken down into subproblems which are reused several times
+    - Fibonacci sequence
+
+### Optimal Substructure
+
+- A problem is said to have optimal substructure if an optimal solution can be constructed from optimal solutions of its subproblems
+    - Shortest path 
+
+### Fibonacci sequence
+
+```js
+function fib(n) {
+    if (n <= 2) return 1;
+    return fib(n-1) + fib(n-2);
+}
+```
+
+**Big O**
+
+```
+O(2^N)
+```
+
+### Enter Memoization
+
+- Storing the results of expensive function calls and returning the cached result when the same inputs occur again
+
+```js
+function fibo(n, memo=[]) {
+    if (memo[n] !== undefined) return memo[n];
+    if (n <= 2) return 1;
+    var res = fib(n-1, memo) + fib(n-2, memo);
+    memo[n] = res;
+    return res;
+}
+```
+
+**Big O**
+
+```
+O(N)
+```
+
+### Tabulation: A Bottom Up Approach
+
+- Storing the result of a previous result in a "table" (usually an array)
+- Usually done using iteration
+- Better space complexity can be achieved using tabulation
+
+```js
+function fib(n) {
+    if (n <= 2) return 1;
+    var fibNums = [0,1,1];
+    for (var i = 3; i <= 2; i++) {
+        fibNums[i] = fibNums[i-1] + fibNums[i-2];
+    }
+    return fibNums[n];
+}
+```
+
+**Big O**
+
+```
+O(N)
+```
+
+
